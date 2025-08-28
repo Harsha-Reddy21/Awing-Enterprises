@@ -26,7 +26,7 @@ def simple_match_score(candidate: Candidate, requirement: Requirement) -> float:
 
 
 @router.get("/requirement/{requirement_id}")
-def match_candidates(requirement_id: int, limit: int = 20, db: Session = Depends(get_db)):
+def match_candidates(requirement_id: int=1, limit: int = 20, db: Session = Depends(get_db)):
     requirement = db.get(Requirement, requirement_id)
     if not requirement:
         return []
