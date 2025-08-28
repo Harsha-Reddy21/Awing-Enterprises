@@ -20,7 +20,7 @@ def _select_providers(settings) -> list:
     return providers
 
 
-@router.post("/search", response_model=List[SourcedCandidate])
+@router.post("/search", response_model=int)
 def search_candidates(payload: SourcingQuery, db: Session = Depends(get_db)):
     settings = get_settings()
     selected_names = set([p.lower() for p in (payload.providers or ["linkedin", "naukri"])])
@@ -34,6 +34,6 @@ def search_candidates(payload: SourcingQuery, db: Session = Depends(get_db)):
 
     # Simple cap
     limit = payload.limit or 20
-    return results[:limit]
+    return min(len(results), limit)
 
 
