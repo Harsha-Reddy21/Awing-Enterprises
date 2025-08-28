@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 from datetime import datetime
 
 from database import get_db
-from models import Confirmation
+from models import Confirmation, Application
 from schemas.domain import ConfirmationCreate, ConfirmationOut
 
 
@@ -12,7 +12,7 @@ router = APIRouter()
 
 @router.post("/", response_model=ConfirmationOut)
 def create_confirmation(payload: ConfirmationCreate, db: Session = Depends(get_db)):
-    app_rec = db.get(models.Application, payload.application_id)
+    app_rec = db.get(Application, payload.application_id)
     if not app_rec:
         raise HTTPException(400, "Invalid application")
     if app_rec.confirmation:

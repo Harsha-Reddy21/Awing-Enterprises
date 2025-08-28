@@ -22,12 +22,12 @@ def create_requirement(payload: RequirementCreate, db: Session = Depends(get_db)
 
 @router.get("/", response_model=List[RequirementOut])
 def list_requirements(db: Session = Depends(get_db)):
-    return db.query(models.Requirement).order_by(models.Requirement.created_at.desc()).all()
+    return db.query(Requirement).order_by(Requirement.created_at.desc()).all()
 
 
 @router.get("/{requirement_id}", response_model=RequirementOut)
 def get_requirement(requirement_id: int, db: Session = Depends(get_db)):
-    record = db.get(models.Requirement, requirement_id)
+    record = db.get(Requirement, requirement_id)
     if not record:
         raise HTTPException(404, "Requirement not found")
     return record
@@ -35,7 +35,7 @@ def get_requirement(requirement_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{requirement_id}", response_model=RequirementOut)
 def update_requirement(requirement_id: int, payload: RequirementCreate, db: Session = Depends(get_db)):
-    record = db.get(models.Requirement, requirement_id)
+    record = db.get(Requirement, requirement_id)
     if not record:
         raise HTTPException(404, "Requirement not found")
     for k, v in payload.dict().items():
@@ -47,7 +47,7 @@ def update_requirement(requirement_id: int, payload: RequirementCreate, db: Sess
 
 @router.delete("/{requirement_id}")
 def delete_requirement(requirement_id: int, db: Session = Depends(get_db)):
-    record = db.get(models.Requirement, requirement_id)
+    record = db.get(Requirement, requirement_id)
     if not record:
         raise HTTPException(404, "Requirement not found")
     db.delete(record)
