@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from database import Base, engine
-from routers import requirements, candidates, applications, interactions, screening, submissions, feedback, outreach, matching, confirmations
+from routers import requirements, candidates, applications, interactions, screening, submissions, feedback, outreach, matching, confirmations, sourcing
 
 
 Base.metadata.create_all(bind=engine)
@@ -33,6 +33,7 @@ app.include_router(feedback.router, prefix="/feedback", tags=["feedback"])
 app.include_router(outreach.router, prefix="/outreach", tags=["outreach"])
 app.include_router(matching.router, prefix="/matching", tags=["matching"])
 app.include_router(confirmations.router, prefix="/confirmations", tags=["confirmations"])
+app.include_router(sourcing.router, prefix="/sourcing", tags=["sourcing"])
 
 #http://host.docker.internal:8000
 import uvicorn

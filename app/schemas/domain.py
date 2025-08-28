@@ -196,3 +196,25 @@ class FeedbackOut(BaseModel):
     class Config:
         from_attributes = True
 
+
+class SourcingQuery(BaseModel):
+    title: Optional[str] = None
+    location: Optional[str] = None
+    min_experience: Optional[float] = None
+    max_experience: Optional[float] = None
+    skills_required: Optional[str] = None
+    limit: Optional[int] = 20
+    providers: Optional[list[str]] = None  # ["linkedin", "naukri"]
+
+
+class SourcedCandidate(BaseModel):
+    full_name: str
+    headline: Optional[str] = None
+    location: Optional[str] = None
+    skills: Optional[list[str]] = None
+    source: str
+    profile_url: Optional[str] = None
+    score: Optional[float] = None
+
+
+
