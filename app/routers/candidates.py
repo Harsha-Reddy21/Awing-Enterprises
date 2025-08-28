@@ -3,9 +3,9 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app import models
-from app.schemas.domain import CandidateCreate, CandidateOut
+from database import get_db
+from models import Candidate
+from schemas.domain import CandidateCreate, CandidateOut
 
 
 router = APIRouter()
@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post("/", response_model=CandidateOut)
 def create_candidate(payload: CandidateCreate, db: Session = Depends(get_db)):
-    record = models.Candidate(**payload.dict())
+    record = Candidate(**payload.dict())
     db.add(record)
     db.commit()
     db.refresh(record)
@@ -22,16 +22,16 @@ def create_candidate(payload: CandidateCreate, db: Session = Depends(get_db)):
 
 @router.get("/", response_model=List[CandidateOut])
 def list_candidates(q: str | None = Query(None), db: Session = Depends(get_db)):
-    query = db.query(models.Candidate)
+    query = db.query(Candidate)
     if q:
         like = f"%{q.lower()}%"
-        query = query.filter(models.Candidate.skills.ilike(like) | models.Candidate.full_name.ilike(like))
-    return query.order_by(models.Candidate.created_at.desc()).all()
+        query = query.filter(Candidate.skills.ilike(like) | Candidate.full_name.ilike(like))
+    return query.order_by(Candidate.created_at.desc()).all()
 
 
 @router.get("/{candidate_id}", response_model=CandidateOut)
 def get_candidate(candidate_id: int, db: Session = Depends(get_db)):
-    record = db.get(models.Candidate, candidate_id)
+    record = db.get(Candidate, candidate_id)
     if not record:
         raise HTTPException(404, "Candidate not found")
     return record
@@ -39,7 +39,7 @@ def get_candidate(candidate_id: int, db: Session = Depends(get_db)):
 
 @router.put("/{candidate_id}", response_model=CandidateOut)
 def update_candidate(candidate_id: int, payload: CandidateCreate, db: Session = Depends(get_db)):
-    record = db.get(models.Candidate, candidate_id)
+    record = db.get(Candidate, candidate_id)
     if not record:
         raise HTTPException(404, "Candidate not found")
     for k, v in payload.dict().items():
@@ -51,7 +51,7 @@ def update_candidate(candidate_id: int, payload: CandidateCreate, db: Session = 
 
 @router.delete("/{candidate_id}")
 def delete_candidate(candidate_id: int, db: Session = Depends(get_db)):
-    record = db.get(models.Candidate, candidate_id)
+    record = db.get(Candidate, candidate_id)
     if not record:
         raise HTTPException(404, "Candidate not found")
     db.delete(record)

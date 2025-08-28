@@ -3,14 +3,14 @@ from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app import models
+from database import get_db
+from models import Candidate, Requirement
 
 
 router = APIRouter()
 
 
-def simple_match_score(candidate: models.Candidate, requirement: models.Requirement) -> float:
+def simple_match_score(candidate: Candidate, requirement: Requirement) -> float:
     score = 0.0
     if candidate.experience_years and requirement.min_experience:
         if candidate.experience_years >= requirement.min_experience:
@@ -27,10 +27,10 @@ def simple_match_score(candidate: models.Candidate, requirement: models.Requirem
 
 @router.get("/requirement/{requirement_id}")
 def match_candidates(requirement_id: int, limit: int = 20, db: Session = Depends(get_db)):
-    requirement = db.get(models.Requirement, requirement_id)
+    requirement = db.get(Requirement, requirement_id)
     if not requirement:
         return []
-    candidates = db.query(models.Candidate).all()
+    candidates = db.query(Candidate).all()
     scored = [
         {
             "candidate_id": c.id,

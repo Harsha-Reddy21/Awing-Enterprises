@@ -34,7 +34,7 @@ app.include_router(outreach.router, prefix="/outreach", tags=["outreach"])
 app.include_router(matching.router, prefix="/matching", tags=["matching"])
 app.include_router(confirmations.router, prefix="/confirmations", tags=["confirmations"])
 
-
+#http://host.docker.internal:8000
 import uvicorn
 if __name__ == "__main__":
     uvicorn.run('main:app', host="0.0.0.0", port=8000)

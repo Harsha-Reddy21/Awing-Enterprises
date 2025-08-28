@@ -1,7 +1,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, Field
 
 
 class CandidateCreate(BaseModel):
@@ -105,7 +105,7 @@ class InteractionOut(BaseModel):
     channel: str
     direction: str
     content: Optional[str] = None
-    metadata: Optional[dict] = None
+    metadata: Optional[dict] = Field(default=None, validation_alias="metadata_")
     created_at: datetime
 
     class Config:

@@ -78,7 +78,7 @@ class Interaction(Base):
     channel: Mapped[str] = mapped_column(String(32), nullable=False)
     direction: Mapped[str] = mapped_column(String(16), nullable=False, default="outbound")
     content: Mapped[Optional[str]] = mapped_column(Text)
-    metadata: Mapped[Optional[dict]] = mapped_column(JSON)
+    metadata_: Mapped[Optional[dict]] = mapped_column("metadata", JSON)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=datetime.utcnow)
 
     candidate: Mapped[Candidate] = relationship(back_populates="interactions")

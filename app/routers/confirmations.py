@@ -2,9 +2,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from datetime import datetime
 
-from app.database import get_db
-from app import models
-from app.schemas.domain import ConfirmationCreate, ConfirmationOut
+from database import get_db
+from models import Confirmation
+from schemas.domain import ConfirmationCreate, ConfirmationOut
 
 
 router = APIRouter()
@@ -17,7 +17,7 @@ def create_confirmation(payload: ConfirmationCreate, db: Session = Depends(get_d
         raise HTTPException(400, "Invalid application")
     if app_rec.confirmation:
         raise HTTPException(400, "Confirmation already exists")
-    record = models.Confirmation(
+    record = Confirmation(
         application_id=payload.application_id,
         rate_or_salary=payload.rate_or_salary,
         contract_duration=payload.contract_duration,
@@ -34,8 +34,8 @@ def create_confirmation(payload: ConfirmationCreate, db: Session = Depends(get_d
 @router.get("/{application_id}", response_model=ConfirmationOut)
 def get_confirmation(application_id: int, db: Session = Depends(get_db)):
     record = (
-        db.query(models.Confirmation)
-        .filter(models.Confirmation.application_id == application_id)
+        db.query(Confirmation)
+        .filter(Confirmation.application_id == application_id)
         .first()
     )
     if not record:
