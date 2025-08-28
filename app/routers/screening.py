@@ -29,6 +29,7 @@ def create_question(payload: ScreeningQuestionCreate, db: Session = Depends(get_
 
 @router.get("/questions/{requirement_id}", response_model=List[ScreeningQuestionOut])
 def list_questions(requirement_id: int, db: Session = Depends(get_db)):
+    print(requirement_id)
     return (
         db.query(ScreeningQuestion)
         .filter(ScreeningQuestion.requirement_id == requirement_id)
