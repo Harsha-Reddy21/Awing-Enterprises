@@ -1,4 +1,5 @@
 from typing import List
+import random
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy.orm import Session
@@ -57,4 +58,56 @@ def delete_candidate(candidate_id: int, db: Session = Depends(get_db)):
     db.delete(record)
     db.commit()
     return {"ok": True}
+
+
+@router.post("/seed", response_model=List[CandidateOut])
+def seed_candidates(count: int = 50, db: Session = Depends(get_db)):
+    skills_pool = [
+        "python",
+        "java",
+        "sql",
+        "aws",
+        "docker",
+        "react",
+        "node",
+        "fastapi",
+        "django",
+        "kubernetes",
+        "golang",
+        "typescript",
+        "terraform",
+    ]
+    locations = [
+        "Bengaluru",
+        "Mumbai",
+        "Delhi",
+        "Hyderabad",
+        "Pune",
+        "Chennai",
+        "Remote",
+    ]
+
+    created: list[Candidate] = []
+    for i in range(count):
+        chosen_skills = ", ".join(random.sample(skills_pool, k=random.randint(3, 7)))
+        record = Candidate(
+            full_name=f"Candidate {random.randint(1000, 9999)}",
+            email=None,  # keep nullable to avoid unique collisions across runs
+            phone=None,  # keep nullable to avoid unique collisions across runs
+            location=random.choice(locations),
+            experience_years=round(random.uniform(0, 15), 1),
+            skills=chosen_skills,
+            notice_period_days=random.choice([0, 15, 30, 60, 90]),
+            expected_salary=round(random.uniform(3, 50), 1),
+            current_salary=round(random.uniform(2, 45), 1),
+            resume_url=None,
+            linkedin_url=None,
+        )
+        db.add(record)
+        created.append(record)
+
+    db.commit()
+    for r in created:
+        db.refresh(r)
+    return created
 
