@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from app.database import Base, engine
-from app.routers import requirements, candidates, applications, interactions, screening, submissions, feedback, outreach, matching, confirmations
+from database import Base, engine
+from routers import requirements, candidates, applications, interactions, screening, submissions, feedback, outreach, matching, confirmations
 
 
 Base.metadata.create_all(bind=engine)
@@ -37,5 +37,5 @@ app.include_router(confirmations.router, prefix="/confirmations", tags=["confirm
 
 import uvicorn
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run('main:app', host="0.0.0.0", port=8000)
 

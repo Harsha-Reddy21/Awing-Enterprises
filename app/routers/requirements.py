@@ -3,9 +3,9 @@ from typing import List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
-from app.database import get_db
-from app import models
-from app.schemas.domain import RequirementCreate, RequirementOut
+from database import get_db
+from models import Requirement
+from schemas.domain import RequirementCreate, RequirementOut
 
 
 router = APIRouter()
@@ -13,7 +13,7 @@ router = APIRouter()
 
 @router.post("/", response_model=RequirementOut)
 def create_requirement(payload: RequirementCreate, db: Session = Depends(get_db)):
-    record = models.Requirement(**payload.dict())
+    record = Requirement(**payload.dict())
     db.add(record)
     db.commit()
     db.refresh(record)
